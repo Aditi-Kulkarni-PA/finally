@@ -1,0 +1,12 @@
+.git
+.planning
+__pycache__
+*.pyc
+*.pyo
+.pytest_cache
+node_modules
+frontend/.next
+frontend/out
+backend/.venv
+db/finally.db
+.env
