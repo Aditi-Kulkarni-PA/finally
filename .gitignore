@@ -1,3 +1,8 @@
+# SQLite database (runtime artifact, not committed)
+*.db
+db/finally.db
+backend/db/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
