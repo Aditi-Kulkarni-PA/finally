@@ -2,6 +2,11 @@
 
 Approach and code structure for simulating realistic stock prices when no Massive API key is configured.
 
+---
+## Important Note for Hierarchy
+
+**Archive folder**: `planning/archive/` contains five design documents (MARKET_DATA_DESIGN.md, MARKET_DATA_REVIEW.md, MARKET_INTERFACE.md, MARKET_SIMULATOR.md, MASSIVE_API.md) that are fully superseded by planning/MARKET_DATA_SUMMARY.md (at the planning/ root, not in this archive folder). 
+
 ## Overview
 
 The simulator uses **Geometric Brownian Motion (GBM)** to generate realistic stock price paths. GBM is the standard model underlying Black-Scholes option pricing — prices evolve continuously with random noise, can't go negative, and exhibit the lognormal distribution seen in real markets.

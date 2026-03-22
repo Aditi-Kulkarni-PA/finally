@@ -2,6 +2,11 @@
 
 Unified Python interface for market data in FinAlly. Two implementations (simulator and Massive API) behind one abstract interface. All downstream code — SSE streaming, price cache, portfolio valuation — is source-agnostic.
 
+---
+## Important Note for Hierarchy
+
+**Archive folder**: `planning/archive/` contains five design documents (MARKET_DATA_DESIGN.md, MARKET_DATA_REVIEW.md, MARKET_INTERFACE.md, MARKET_SIMULATOR.md, MASSIVE_API.md) that are fully superseded by planning/MARKET_DATA_SUMMARY.md (at the planning/ root, not in this archive folder). 
+
 ## Core Data Model
 
 ```python

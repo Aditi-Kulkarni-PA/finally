@@ -4,6 +4,11 @@
 **Scope:** `backend/app/market/` (8 source files) and `backend/tests/market/` (6 test files)
 
 ---
+## Important Note for Hierarchy
+
+**Archive folder**: `planning/archive/` contains five design documents (MARKET_DATA_DESIGN.md, MARKET_DATA_REVIEW.md, MARKET_INTERFACE.md, MARKET_SIMULATOR.md, MASSIVE_API.md) that are fully superseded by planning/MARKET_DATA_SUMMARY.md (at the planning/ root, not in this archive folder). 
+
+---
 
 ## 1. Test Results Summary
 

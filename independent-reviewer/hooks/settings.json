@@ -1,0 +1,20 @@
+{
+  "enabledPlugins": {
+    "frontend-design@claude-plugins-official": true,
+    "context7@claude-plugins-official": true,
+    "playwright@claude-plugins-official": true
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "codex exec \"Review all changes made since last commit and write your feedback to the file planning/review.md\""
+          }
+        ]
+      }
+    ]
+  }
+}

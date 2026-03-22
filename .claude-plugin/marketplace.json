@@ -1,0 +1,19 @@
+{
+    "name": "ak-tools",
+    "owner": {
+        "name": "aditikulkarni",
+        "email": "aditi.dilip.kulkarni@outlook.com"
+    },
+    "plugins": [
+        {
+            "name": "independent-reviewer",
+            "source": "./independent-reviewer",
+            "description": "Carry out an independent review of all changes done since last commit",
+            "version": "1.0.0",
+            "author": {
+                "name": "aditikulkarni",
+                "email": "aditi.dilip.kulkarni@outlook.com"
+            }
+        }
+    ]
+}

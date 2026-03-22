@@ -2,6 +2,11 @@
 
 Reference documentation for the Massive (formerly Polygon.io) REST API as used in FinAlly.
 
+---
+## Important Note for Hierarchy
+
+**Archive folder**: `planning/archive/` contains five design documents (MARKET_DATA_DESIGN.md, MARKET_DATA_REVIEW.md, MARKET_INTERFACE.md, MARKET_SIMULATOR.md, MASSIVE_API.md) that are fully superseded by planning/MARKET_DATA_SUMMARY.md (at the planning/ root, not in this archive folder). 
+
 ## Overview
 
 - **Base URL**: `https://api.massive.com` (legacy `https://api.polygon.io` still supported)

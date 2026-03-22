@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(codex exec:*)",
+      "WebSearch",
+      "WebFetch(domain:massive.com)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:polygon.io)",
+      "WebFetch(domain:www.oreateai.com)",
+      "WebFetch(domain:deepwiki.com)"
+    ]
+  },
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": true
+  }
+}
