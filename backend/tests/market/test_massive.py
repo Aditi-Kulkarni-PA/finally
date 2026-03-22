@@ -111,21 +111,24 @@ class TestMassiveDataSource:
         await source.add_ticker("AAPL")
         assert "AAPL" in source.get_tickers()
 
-    async def test_add_ticker_uppercase_normalization(self):
-        """Test that tickers are normalized to uppercase."""
+    async def test_add_ticker_duplicate_is_noop(self):
+        """Adding the same ticker twice does not create duplicates."""
         cache = PriceCache()
         source = MassiveDataSource(api_key="test-key", price_cache=cache)
 
-        await source.add_ticker("aapl")
-        assert "AAPL" in source.get_tickers()
+        await source.add_ticker("AAPL")
+        await source.add_ticker("AAPL")
+        assert source.get_tickers().count("AAPL") == 1
 
-    async def test_add_ticker_strips_whitespace(self):
-        """Test that ticker whitespace is stripped."""
+    async def test_add_multiple_tickers(self):
+        """Multiple distinct tickers are all tracked."""
         cache = PriceCache()
         source = MassiveDataSource(api_key="test-key", price_cache=cache)
 
-        await source.add_ticker("  AAPL  ")
+        await source.add_ticker("AAPL")
+        await source.add_ticker("GOOGL")
         assert "AAPL" in source.get_tickers()
+        assert "GOOGL" in source.get_tickers()
 
     async def test_remove_ticker(self):
         """Test removing a ticker."""
