@@ -5,11 +5,11 @@
 See: .planning/PROJECT.md (updated 2026-03-22)
 
 **Core value:** Single Docker command → Bloomberg-style AI trading terminal with live prices, simulated portfolio, and AI chat.
-**Current focus:** Phase 5 — Docker & Deployment
+**Current focus:** Phase 6 — Testing
 
 ## Current Phase
 
-**Phase 4: Frontend** — Complete
+**Phase 5: Docker & Deployment** — Complete
 
 ## Phase Progress
 
@@ -19,7 +19,7 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 | 2 | Portfolio & Watchlist APIs | ✓ Complete |
 | 3 | LLM Chat Integration | ✓ Complete |
 | 4 | Frontend | ✓ Complete |
-| 5 | Docker & Deployment | ○ Pending |
+| 5 | Docker & Deployment | ✓ Complete |
 | 6 | Testing | ○ Pending |
 
 ## Decisions Made
@@ -37,6 +37,7 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 - **Static export**: output: 'export' in next.config.ts; out/ directory served by FastAPI
 - **Sparkline accumulation**: last 60 SSE price points per ticker accumulated in usePriceStream hook
 - **Chat panel**: collapsible sidebar; collapsed width 40px, expanded 320px
+- **Static serving mount**: /_next mounted at StaticFiles(static/_next); catch-all serves real files then index.html
 
 ## Known Context
 
@@ -62,6 +63,7 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 | 2 | 1 | ~20 min | 4 | 4 |
 | 3 | 1 | ~15 min | 4 | 5 |
 | 4 | 1 | ~35 min | 6 | 18 |
+| 5 | 1 | ~5 min | 1 | 9 |
 
 ---
-*Last session: 2026-03-22 — Completed Phase 4 Frontend (Bloomberg-style trading terminal)*
+*Last session: 2026-03-22 — Completed Phase 5 Docker & Deployment (multi-stage build, start/stop scripts)*
