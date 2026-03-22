@@ -64,13 +64,11 @@ class MassiveDataSource(MarketDataSource):
         logger.info("Massive poller stopped")
 
     async def add_ticker(self, ticker: str) -> None:
-        ticker = ticker.upper().strip()
         if ticker not in self._tickers:
             self._tickers.append(ticker)
             logger.info("Massive: added ticker %s (will appear on next poll)", ticker)
 
     async def remove_ticker(self, ticker: str) -> None:
-        ticker = ticker.upper().strip()
         self._tickers = [t for t in self._tickers if t != ticker]
         self._cache.remove(ticker)
         logger.info("Massive: removed ticker %s", ticker)

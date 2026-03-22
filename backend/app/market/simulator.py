@@ -215,19 +215,23 @@ class SimulatorDataSource(MarketDataSource):
         self._event_prob = event_probability
         self._sim: GBMSimulator | None = None
         self._task: asyncio.Task | None = None
+        self._pending_tickers: list[str] = []
 
     async def start(self, tickers: list[str]) -> None:
+        # Merge any tickers added before start() was called, deduplicating
+        all_tickers = list(dict.fromkeys(tickers + self._pending_tickers))
+        self._pending_tickers.clear()
         self._sim = GBMSimulator(
-            tickers=tickers,
+            tickers=all_tickers,
             event_probability=self._event_prob,
         )
         # Seed the cache with initial prices so SSE has data immediately
-        for ticker in tickers:
+        for ticker in all_tickers:
             price = self._sim.get_price(ticker)
             if price is not None:
                 self._cache.update(ticker=ticker, price=price)
         self._task = asyncio.create_task(self._run_loop(), name="simulator-loop")
-        logger.info("Simulator started with %d tickers", len(tickers))
+        logger.info("Simulator started with %d tickers", len(all_tickers))
 
     async def stop(self) -> None:
         if self._task and not self._task.done():
@@ -240,13 +244,18 @@ class SimulatorDataSource(MarketDataSource):
         logger.info("Simulator stopped")
 
     async def add_ticker(self, ticker: str) -> None:
-        if self._sim:
-            self._sim.add_ticker(ticker)
-            # Seed cache immediately so the ticker has a price right away
-            price = self._sim.get_price(ticker)
-            if price is not None:
-                self._cache.update(ticker=ticker, price=price)
-            logger.info("Simulator: added ticker %s", ticker)
+        if self._sim is None:
+            # start() has not been called yet — queue for later
+            if ticker not in self._pending_tickers:
+                self._pending_tickers.append(ticker)
+            logger.debug("Simulator: queued ticker %s (not yet started)", ticker)
+            return
+        self._sim.add_ticker(ticker)
+        # Seed cache immediately so the ticker has a price right away
+        price = self._sim.get_price(ticker)
+        if price is not None:
+            self._cache.update(ticker=ticker, price=price)
+        logger.info("Simulator: added ticker %s", ticker)
 
     async def remove_ticker(self, ticker: str) -> None:
         if self._sim:

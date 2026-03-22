@@ -136,3 +136,28 @@ class TestSimulatorDataSource:
         # Just verify it starts and stops cleanly
         await asyncio.sleep(0.2)
         await source.stop()
+
+    async def test_add_ticker_before_start(self):
+        """Tickers added before start() are included when start() is called."""
+        cache = PriceCache()
+        source = SimulatorDataSource(price_cache=cache, update_interval=0.1)
+
+        await source.add_ticker("TSLA")
+        await source.start(["AAPL"])
+
+        assert "TSLA" in source.get_tickers()
+        assert cache.get("TSLA") is not None
+
+        await source.stop()
+
+    async def test_add_ticker_before_start_deduplication(self):
+        """A ticker passed to both add_ticker (pre-start) and start() is not duplicated."""
+        cache = PriceCache()
+        source = SimulatorDataSource(price_cache=cache, update_interval=0.1)
+
+        await source.add_ticker("AAPL")
+        await source.start(["AAPL", "GOOGL"])
+
+        assert source.get_tickers().count("AAPL") == 1
+
+        await source.stop()
