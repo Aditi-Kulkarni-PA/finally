@@ -9,7 +9,7 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 
 ## Current Phase
 
-**Phase 5: Docker & Deployment** — Complete
+**Phase 6: Testing** — Complete
 
 ## Phase Progress
 
@@ -20,7 +20,7 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 | 3 | LLM Chat Integration | ✓ Complete |
 | 4 | Frontend | ✓ Complete |
 | 5 | Docker & Deployment | ✓ Complete |
-| 6 | Testing | ○ Pending |
+| 6 | Testing | ✓ Complete |
 
 ## Decisions Made
 
@@ -38,6 +38,8 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 - **Sparkline accumulation**: last 60 SSE price points per ticker accumulated in usePriceStream hook
 - **Chat panel**: collapsible sidebar; collapsed width 40px, expanded 320px
 - **Static serving mount**: /_next mounted at StaticFiles(static/_next); catch-all serves real files then index.html
+- **Test fixture pattern**: in-memory SQLite via aiosqlite.connect(":memory:") with inlined schema for isolation; monkeypatch DB_PATH for route tests
+- **Minimal test apps**: route tests use minimal FastAPI app + mocked app.state instead of full lifespan app
 
 ## Known Context
 
@@ -64,6 +66,7 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 | 3 | 1 | ~15 min | 4 | 5 |
 | 4 | 1 | ~35 min | 6 | 18 |
 | 5 | 1 | ~5 min | 1 | 9 |
+| 6 | 1 | ~15 min | 8 | 7 |
 
 ---
-*Last session: 2026-03-22 — Completed Phase 5 Docker & Deployment (multi-stage build, start/stop scripts)*
+*Last session: 2026-03-22 — Completed Phase 6 Testing (23 new backend unit tests, E2E Playwright infrastructure)*
