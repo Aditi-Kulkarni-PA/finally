@@ -1,5 +1,7 @@
 {
   "enabledPlugins": {
-    "independent-reviewer@ak-tools": true
+    "independent-reviewer@ak-tools": true,
+    "discord@claude-plugins-official": true,
+    "playwright@claude-plugins-official": true
   }
 }
