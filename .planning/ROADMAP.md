@@ -7,7 +7,7 @@
 
 | Phase | Name | Status | Plans |
 |-------|------|--------|-------|
-| 1 | Backend Core | ○ Pending | 4 |
+| 1 | Backend Core | ✓ Complete | 4 |
 | 2 | Portfolio & Watchlist APIs | ○ Pending | 4 |
 | 3 | LLM Chat Integration | ○ Pending | 3 |
 | 4 | Frontend | ○ Pending | 6 |
