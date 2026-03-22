@@ -14,7 +14,10 @@ from fastapi.staticfiles import StaticFiles
 from app.database import get_db, init_db
 from app.market import PriceCache, create_market_data_source
 from app.market.stream import _generate_events
+from app.portfolio import record_portfolio_snapshot
 from app.routes.health import router as health_router
+from app.routes.portfolio import router as portfolio_router
+from app.routes.watchlist import router as watchlist_router
 
 logger = logging.getLogger(__name__)
 
@@ -22,13 +25,15 @@ STATIC_DIR = os.path.join(os.path.dirname(__file__), "..", "static")
 
 
 async def _portfolio_snapshot_task(app: FastAPI) -> None:
-    """Record portfolio value every 30 seconds.
-
-    calculate_portfolio_value is wired in Phase 2. Until then this task is a no-op loop.
-    """
+    """Record portfolio value snapshot every 30 seconds."""
     while True:
         await asyncio.sleep(30)
-        logger.debug("Portfolio snapshot task tick (full impl in Phase 2)")
+        try:
+            async with get_db() as db:
+                await record_portfolio_snapshot(db, app.state.price_cache)
+            logger.debug("Portfolio snapshot recorded")
+        except Exception:
+            logger.exception("Portfolio snapshot task error")
 
 
 @asynccontextmanager
@@ -74,6 +79,8 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="FinAlly API", lifespan=lifespan)
 
 app.include_router(health_router, prefix="/api")
+app.include_router(portfolio_router)
+app.include_router(watchlist_router)
 
 
 @app.get("/api/stream/prices")
