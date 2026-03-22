@@ -17,7 +17,7 @@ export default function PnLChart({ history }: PnLChartProps) {
   useEffect(() => {
     async function init() {
       if (!containerRef.current) return;
-      const { createChart, ColorType } = await import('lightweight-charts');
+      const { createChart, ColorType, LineSeries } = await import('lightweight-charts');
 
       const chart = createChart(containerRef.current, {
         layout: {
@@ -41,7 +41,8 @@ export default function PnLChart({ history }: PnLChartProps) {
         handleScale: true,
       });
 
-      const lineSeries = chart.addLineSeries({
+      // lightweight-charts v5 uses addSeries(SeriesDefinition, options)
+      const lineSeries = chart.addSeries(LineSeries, {
         color: '#ecad0a',
         lineWidth: 2,
         priceLineVisible: false,

@@ -22,7 +22,7 @@ export default function MainChart({ ticker, prices, sparklines }: MainChartProps
 
     async function init() {
       if (!containerRef.current) return;
-      const { createChart, ColorType } = await import('lightweight-charts');
+      const { createChart, ColorType, AreaSeries } = await import('lightweight-charts');
 
       chart = createChart(containerRef.current, {
         layout: {
@@ -46,7 +46,8 @@ export default function MainChart({ ticker, prices, sparklines }: MainChartProps
         handleScale: true,
       });
 
-      const areaSeries = chart.addAreaSeries({
+      // lightweight-charts v5 uses addSeries(SeriesDefinition, options)
+      const areaSeries = chart.addSeries(AreaSeries, {
         lineColor: '#209dd7',
         topColor: 'rgba(32, 157, 215, 0.3)',
         bottomColor: 'rgba(32, 157, 215, 0.0)',

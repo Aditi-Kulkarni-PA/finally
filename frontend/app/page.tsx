@@ -1,65 +1,155 @@
-import Image from "next/image";
+'use client';
+
+import { useState } from 'react';
+import Header from '@/components/Header';
+import WatchlistPanel from '@/components/WatchlistPanel';
+import MainChart from '@/components/MainChart';
+import PortfolioHeatmap from '@/components/PortfolioHeatmap';
+import PnLChart from '@/components/PnLChart';
+import PositionsTable from '@/components/PositionsTable';
+import TradeBar from '@/components/TradeBar';
+import ChatPanel from '@/components/ChatPanel';
+import { usePriceStream } from '@/hooks/usePriceStream';
+import { usePortfolio } from '@/hooks/usePortfolio';
+import { useWatchlist } from '@/hooks/useWatchlist';
+import { useChat } from '@/hooks/useChat';
 
 export default function Home() {
+  const [selectedTicker, setSelectedTicker] = useState<string | null>(null);
+  const [chatCollapsed, setChatCollapsed] = useState(false);
+
+  const { prices, sparklines, status } = usePriceStream();
+  const { portfolio, history, executeTrade, fetchPortfolio } = usePortfolio();
+  const { watchlist, addTicker, removeTicker, fetchWatchlist } = useWatchlist();
+  const { messages, loading: chatLoading, sendMessage } = useChat(fetchPortfolio);
+
+  async function handleRemoveTicker(ticker: string) {
+    await removeTicker(ticker);
+    if (selectedTicker === ticker) setSelectedTicker(null);
+  }
+
+  async function handleAddTicker(ticker: string) {
+    const err = await addTicker(ticker);
+    return err;
+  }
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100vh',
+        overflow: 'hidden',
+        background: '#0d1117',
+      }}
+    >
+      <Header portfolio={portfolio} status={status} />
+
+      {/* Main layout: watchlist | center | chat */}
+      <div
+        style={{
+          flex: 1,
+          display: 'flex',
+          overflow: 'hidden',
+          gap: '2px',
+          padding: '2px',
+          minHeight: 0,
+        }}
+      >
+        {/* Left: Watchlist */}
+        <div
+          style={{
+            width: '305px',
+            minWidth: '305px',
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden',
+            flexShrink: 0,
+          }}
+        >
+          <WatchlistPanel
+            watchlist={watchlist}
+            prices={prices}
+            sparklines={sparklines}
+            selectedTicker={selectedTicker}
+            onSelectTicker={setSelectedTicker}
+            onAddTicker={handleAddTicker}
+            onRemoveTicker={handleRemoveTicker}
+          />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+
+        {/* Center: Chart + Portfolio */}
+        <div
+          style={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '2px',
+            overflow: 'hidden',
+            minWidth: 0,
+          }}
+        >
+          {/* Top: Main Chart */}
+          <div style={{ flex: '1 1 40%', minHeight: 0 }}>
+            <MainChart
+              ticker={selectedTicker}
+              prices={prices}
+              sparklines={sparklines}
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+          </div>
+
+          {/* Middle: Heatmap + PnL Chart side by side */}
+          <div
+            style={{
+              display: 'flex',
+              gap: '2px',
+              flex: '1 1 28%',
+              minHeight: 0,
+            }}
           >
-            Documentation
-          </a>
+            <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+              <PortfolioHeatmap
+                positions={portfolio.positions}
+                totalValue={portfolio.total_value}
+              />
+            </div>
+            <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+              <PnLChart history={history} />
+            </div>
+          </div>
+
+          {/* Bottom: Positions + Trade bar */}
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '2px',
+              flex: '0 0 auto',
+            }}
+          >
+            <div style={{ maxHeight: '160px', overflow: 'hidden' }}>
+              <PositionsTable positions={portfolio.positions} prices={prices} />
+            </div>
+            <TradeBar
+              selectedTicker={selectedTicker}
+              onTrade={async (ticker, qty, side) => {
+                const err = await executeTrade(ticker, qty, side);
+                if (!err) await fetchWatchlist();
+                return err;
+              }}
+            />
+          </div>
         </div>
-      </main>
+
+        {/* Right: Chat Panel */}
+        <ChatPanel
+          messages={messages}
+          loading={chatLoading}
+          onSend={sendMessage}
+          collapsed={chatCollapsed}
+          onToggle={() => setChatCollapsed((c) => !c)}
+        />
+      </div>
     </div>
   );
 }
