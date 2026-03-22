@@ -101,9 +101,15 @@ async def stream_prices(request: Request) -> StreamingResponse:
 
 # Static file serving for the Next.js export (available after Docker build)
 if os.path.isdir(STATIC_DIR):
-    app.mount("/assets", StaticFiles(directory=STATIC_DIR), name="static")
+    # Serve /_next/ assets (JS, CSS bundles from Next.js build)
+    _next_dir = os.path.join(STATIC_DIR, "_next")
+    if os.path.isdir(_next_dir):
+        app.mount("/_next", StaticFiles(directory=_next_dir), name="nextjs-assets")
 
     @app.get("/{full_path:path}")
     async def spa_fallback(full_path: str) -> FileResponse:
-        """Serve index.html for any non-API route (client-side SPA routing)."""
+        """Serve static files or index.html for SPA routing."""
+        file_path = os.path.join(STATIC_DIR, full_path)
+        if full_path and os.path.isfile(file_path):
+            return FileResponse(file_path)
         return FileResponse(os.path.join(STATIC_DIR, "index.html"))
