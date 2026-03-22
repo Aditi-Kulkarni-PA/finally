@@ -15,6 +15,7 @@ from app.database import get_db, init_db
 from app.market import PriceCache, create_market_data_source
 from app.market.stream import _generate_events
 from app.portfolio import record_portfolio_snapshot
+from app.routes.chat import router as chat_router
 from app.routes.health import router as health_router
 from app.routes.portfolio import router as portfolio_router
 from app.routes.watchlist import router as watchlist_router
@@ -81,6 +82,7 @@ app = FastAPI(title="FinAlly API", lifespan=lifespan)
 app.include_router(health_router, prefix="/api")
 app.include_router(portfolio_router)
 app.include_router(watchlist_router)
+app.include_router(chat_router)
 
 
 @app.get("/api/stream/prices")
