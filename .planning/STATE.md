@@ -5,11 +5,11 @@
 See: .planning/PROJECT.md (updated 2026-03-22)
 
 **Core value:** Single Docker command → Bloomberg-style AI trading terminal with live prices, simulated portfolio, and AI chat.
-**Current focus:** Phase 3 — LLM Chat Integration
+**Current focus:** Phase 4 — Frontend
 
 ## Current Phase
 
-**Phase 2: Portfolio & Watchlist APIs** — Complete
+**Phase 3: LLM Chat Integration** — Complete
 
 ## Phase Progress
 
@@ -17,7 +17,7 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 |-------|------|--------|
 | 1 | Backend Core | ✓ Complete |
 | 2 | Portfolio & Watchlist APIs | ✓ Complete |
-| 3 | LLM Chat Integration | ○ Pending |
+| 3 | LLM Chat Integration | ✓ Complete |
 | 4 | Frontend | ○ Pending |
 | 5 | Docker & Deployment | ○ Pending |
 | 6 | Testing | ○ Pending |
@@ -38,7 +38,16 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 - FastAPI app boots, all API endpoints respond correctly
 - Portfolio, watchlist, trade, and history endpoints all verified
 - Frontend directory is empty — needs full Next.js setup
-- routes/ has health.py, portfolio.py, watchlist.py; llm/ dir still empty
+- routes/ has health.py, portfolio.py, watchlist.py, chat.py
+- llm/ module: client.py (LiteLLM async wrapper), prompts.py (system prompt + context builder)
+- Chat endpoints: POST /api/chat and GET /api/chat/history both verified in mock mode
+- LLM_MOCK=true returns MOCK_LLM_RESPONSE constant; LLM_MOCK=false requires OPENROUTER_API_KEY
+
+## Decisions Made
+
+- **LLM response parsing**: fallback to raw content as message on malformed JSON
+- **Chat history limit**: last 20 messages per request to bound LLM context size
+- **Watchlist idempotency**: silently ignore add for existing ticker, remove for absent ticker
 
 ## Performance Metrics
 
@@ -46,6 +55,7 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 |-------|------|----------|-------|-------|
 | 1 | 1 | ~15 min | 4 | 6 |
 | 2 | 1 | ~20 min | 4 | 4 |
+| 3 | 1 | ~15 min | 4 | 5 |
 
 ---
-*Last session: 2026-03-22 — Completed Phase 2 Portfolio & Watchlist APIs*
+*Last session: 2026-03-22 — Completed Phase 3 LLM Chat Integration*
